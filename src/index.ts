@@ -4,10 +4,12 @@ import endpointsConfig from "./endpoints.config";
 import executeDBScript from "./config/database";
 import router from "./routes";
 import helmet from "helmet";
+import authAccess from "./middlewares/authAccess";
 const port = endpointsConfig.port;
 const app = express();
 app.use(cors());
-app.use(helmet())
+app.use(helmet());
+app.use(express.json());
 app.listen(port, () => {
   console.log(`server listening on port: ${port}`);
 });

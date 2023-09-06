@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-const sendOTP = (email: string, verificationCode: string) => {
+const sendOTP = (email: string, verificationCode: number) => {
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
@@ -17,7 +17,7 @@ const sendOTP = (email: string, verificationCode: string) => {
         from: "lifesport.hcmvn@gmail.com",
         to: email,
         subject: "Code Verification",
-        html: `<p>LS-<b><mark>${verificationCode}</mark></b> is your verification code.</p>`,
+        html: `<p>LifeTravel-<b><mark>${verificationCode}</mark></b> is your verification code.</p>`,
     };
     transporter.sendMail(mailOption, (error, info) => {
         if (error) {

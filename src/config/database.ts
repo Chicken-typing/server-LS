@@ -27,7 +27,7 @@ async function executeDBScript(text: string) {
     const res = await client.query(text);
     return res.rows;
   } catch {
-    throw new Error("Can not access databse.");
+    throw new Error("Query fail.");
   } finally {
     client.release();
   }

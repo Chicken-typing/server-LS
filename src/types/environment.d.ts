@@ -18,6 +18,7 @@ declare global {
       PGPASSWORD: string;
       DATABASE_URL: string;
       ENDPOINT_ID: string;
+      ACCESS_SECRET: string;
     }
   }
 }

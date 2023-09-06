@@ -1,9 +1,10 @@
 import express from "express";
-import  user_route from "./userRoute";
+import  user_route from "./user/userRoute";
+import authAccess from "../middlewares/authAccess";
 const router = express.Router();
-router.get("/", function (request, response) {
-  response.send("Welcome to LifeSport api.");
+router.get("/",authAccess, function (request, response) {
+  response.send("Welcome to LifeTravel api.");
 });
-router.use("/users", user_route);
+router.use("/users",authAccess, user_route);
 // router.use("/products",product_route)
 export default router;
