@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import moment from 'moment';
 import * as jwt from 'jsonwebtoken';
+import decodeToken from '../utils/decodeToken';
 const authOTP = async (
   request: Request,
   response: Response,
@@ -9,9 +10,7 @@ const authOTP = async (
     
     const { email, key } = request.body;
 
-  const decode_key = <jwt.JwtPayload>(
-    jwt.verify(key, <jwt.Secret>process.env.JWT_SECRET)
-    );
+  const decode_key = decodeToken(key);
   if (
     moment.unix(<number>decode_key.exp) > moment() &&
     decode_key.email === email &&

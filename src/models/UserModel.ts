@@ -34,10 +34,10 @@ class UserModel {
         return true;
       });
   }
-  async createOrUpdateUser(email: string, password: string, role: string, name: string, token: string) {
+  async createOrUpdateUser(id:string,email: string, password: string, role: string="customer", name: string, token: string) {
     
-    const q = `INSERT INTO users(email, password,role, name,token)
-    VALUES('${email}', '${password}','${role}', '${name}','${token}')
+    const q = `INSERT INTO users(id,email, password,role, name,token)
+    VALUES('${id}','${email}', '${password}','${role}', '${name}','${token}')
     ON CONFLICT(email) DO UPDATE
     SET  token = EXCLUDED.token, password= EXCLUDED.password, updated_at = NOW()`;
 
@@ -50,9 +50,11 @@ class UserModel {
       });
     return result;
   }
-  async getUser(email: string) {
+  async getUserInformations(id: string) {
     try {
-      const q = ` SELECT * FROM users WHERE email ='${email}' LIMIT 1`;
+      const q = ` SELECT * FROM user_informations WHERE user_id ='${id}'`;
+      console.log(q);
+      
       const result = await executeDBScript(q)
         .then((res) => {
           return res;

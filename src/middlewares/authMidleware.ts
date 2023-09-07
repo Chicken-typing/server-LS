@@ -1,18 +1,21 @@
 import { Request, Response, NextFunction } from "express";
-import * as jwt from "jsonwebtoken";
 import UserModel from "../models/UserModel";
 import expToken from "../utils/expToken";
 import User from "../interface/user";
-const authMiddleware= async(
+import decodeToken from "../utils/decodeToken";
+const authMidleware= async(
   request: Request,
   response: Response,
   next: NextFunction
 ) =>{
   const token = request.headers.authorization?.split(" ")[1] || "";
-  const user = <User>(<jwt.JwtPayload>jwt.verify(token, process.env.JWT_SECRET));
+  const user = <User>(decodeToken(token));
+  console.log(user);
+  
   try {
     if (await UserModel.isExistUser(user.email)) {
       if (expToken(token)) {
+        request.body.id = user.id;
         next();
       } else {
         //todo return redirect to login 
@@ -29,4 +32,4 @@ const authMiddleware= async(
     });
   }
 }
-export default authMiddleware;
+export default authMidleware;
