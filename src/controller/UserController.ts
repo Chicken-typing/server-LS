@@ -10,6 +10,7 @@ import sendOTP from "../utils/sendOTP";
 import { hashPassword } from "../utils/hashPassword";
 import decodeToken from "../utils/decodeToken";
 import { Md5 } from "ts-md5";
+import User_Infor from "../interface/user_infor";
 class UserController {
   async register(request: Request, response: Response) {
     const { email } = request.body;
@@ -84,12 +85,21 @@ class UserController {
     request: Request,
     response: Response,
   ) {
-    const { id } = request.body;
-    console.log(request.body);
-    
+    const { id } = request.params;
     await UserModel.getUserInformations(id).then(res => {
       return response.status(200).json({user_infos:res});
     });
+  }
+  async addOrUpdateInformations( request:Request, response:Response) {
+    const user_infor = <User_Infor>request.body;
+    await UserModel.addUserInfo(user_infor).then(res => {
+      return  response.status(200).json({status:"success",message:"Add user information success.", user_infor:user_infor});
+    })
+      .catch(() => { 
+         return response
+           .status(500)
+           .json({ status: "error", message: "Add user information fail." });
+      })
   }
 }
 export default new UserController();

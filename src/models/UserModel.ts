@@ -1,5 +1,6 @@
 import executeDBScript from "../config/database";
 import User from "../interface/user";
+import User_Infor from "../interface/user_infor";
 import { hashPassword, compareHashPassword } from "../utils/hashPassword";
 class UserModel {
   async login(email: string, password: string) {
@@ -92,11 +93,31 @@ class UserModel {
         )`;
       const result = await executeDBScript(q).then((res) => {
         return res;
-      });
+      }).catch(()=>{throw"Error"});
       return result;
     } catch (err) {
       console.error("Error in checking if a user exists", err);
     }
+  }
+  async addUserInfo(infor:User_Infor) {
+    const q = `INSERT user_informations(user_id,phone_number,address,street,city,province,country)
+    VALUES ('${infor.user_id}','${infor.phone_number}','${infor.address}','${infor.street}','${infor.city}','${infor.province}','${infor.country}
+    ON CONFLICT(user_id) DO UPDATE
+    SET  phone_number = EXCLUDED.phone_number,
+      address= EXCLUDED.address,
+      street= EXCLUDED.street,
+      city= EXCLUDED.city,
+      proivnce= EXCLUDED.province,
+      country= EXCLUDED.country,
+      updated_at = NOW()`;
+    const result = await executeDBScript(q)
+      .then((res) => {
+        return res;
+      })
+      .catch((error) => {
+        throw new Error("Error in adding the user's information: ", error);
+      });
+    return result;
   }
 }
 export default new UserModel();
