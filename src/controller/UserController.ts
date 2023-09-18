@@ -83,8 +83,8 @@ class UserController {
     request: Request,
     response: Response,
   ) {
-    const { id } = request.params;
-    await UserModel.getUserInformations(id).then(res => {
+    const _id = request.body._id;
+    await UserModel.getUserInformations(_id).then(res => {
       return response.status(200).json({user_infos:res});
     });
   }

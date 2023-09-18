@@ -52,9 +52,7 @@ class UserModel {
   }
   async getUserInformations(id: string) {
     try {
-      const q = ` SELECT * FROM user_informations WHERE user_id ='${id}'`;
-      console.log(q);
-      
+      const q = ` SELECT * FROM user_informations WHERE user_id ='${id}'`;      
       const result = await executeDBScript(q)
         .then((res) => {
           return res;
@@ -99,14 +97,14 @@ class UserModel {
     }
   }
   async addUserInfo(infor:User_Infor) {
-    const q = `INSERT user_informations(user_id,phone_number,address,street,city,province,country)
-    VALUES ('${infor.user_id}','${infor.phone_number}','${infor.address}','${infor.street}','${infor.city}','${infor.province}','${infor.country}
+    const q = `INSERT INTO user_informations(user_id,phone_number,address,street,city,province,country)
+    VALUES ('${infor._id}','${infor.phone_number}','${infor.address}','${infor.street}','${infor.city}','${infor.province}','${infor.country}')
     ON CONFLICT(user_id) DO UPDATE
     SET  phone_number = EXCLUDED.phone_number,
       address= EXCLUDED.address,
       street= EXCLUDED.street,
       city= EXCLUDED.city,
-      proivnce= EXCLUDED.province,
+      province= EXCLUDED.province,
       country= EXCLUDED.country,
       updated_at = NOW()`;
     const result = await executeDBScript(q)
@@ -115,7 +113,7 @@ class UserModel {
       })
       .catch((error) => {
         throw new Error("Error in adding the user's information: ", error);
-      });
+      });    
     return result;
   }
 }

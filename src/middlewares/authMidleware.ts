@@ -15,7 +15,7 @@ const authMidleware= async(
     if (decoded_data.status) {
       const user = <User>decoded_data.decoded;
       if (await UserModel.isExistUser(user.email)) {
-        request.body.id = user.id;
+        request.body._id = user.id;
         next();
       } else {
         throw "Invalid user.";

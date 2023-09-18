@@ -1,5 +1,5 @@
 export default interface User_Infor {
-  user_id: string;
+  _id: string;
   phone_number: string;
   address:string
   street: string;
