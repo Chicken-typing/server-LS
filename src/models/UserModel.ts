@@ -23,7 +23,6 @@ class UserModel {
   }
   async updateToken(id: string | number, token: string) {
     const q = `UPDATE users SET token='${token}' WHERE id='${id}'`;
-    console.log(q);
     
     return await executeDBScript(q)
       .then(() => {

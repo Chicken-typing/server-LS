@@ -1,30 +1,32 @@
 import { Request, Response, NextFunction } from "express";
 import UserModel from "../models/UserModel";
-import expToken from "../utils/expToken";
 import User from "../interface/user";
 import decodeToken from "../utils/decodeToken";
+import Token_Decoded from "../interface/token_decoded";
 const authMidleware= async(
   request: Request,
   response: Response,
   next: NextFunction
 ) =>{
   const token = request.headers.authorization?.split(" ")[1] || "";
-  const user = <User>(decodeToken(token));
-  console.log(user);
+  const decoded_data = <Token_Decoded> await decodeToken(token);
   
   try {
-    if (await UserModel.isExistUser(user.email)) {
-      if (expToken(token)) {
+    if (decoded_data.status) {
+      const user = <User>decoded_data.decoded;
+      if (await UserModel.isExistUser(user.email)) {
         request.body.id = user.id;
         next();
       } else {
-        //todo return redirect to login 
-        response.status(401).send({
-          message: "Your account is expiration.",
-        });
+        throw "Invalid user.";
       }
     } else {
-      throw "Invalid user.";
+      //todo return redirect to login
+      response.status(401).json({
+        status: 'error',
+        message: "Your account is expiration.",
+        redirectURL:'/logout'
+      });
     }
   } catch {
     response.status(401).send({

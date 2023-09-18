@@ -1,16 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import UserModel from "../models/UserModel";
 import generateToken from "../utils/generateToken";
-import User from "../interface/user";
 import _ from "lodash";
-import expToken from "../utils/expToken";
-import executeDBScript from "../config/database";
 import generateOTP from "../utils/generateOTP";
 import sendOTP from "../utils/sendOTP";
 import { hashPassword } from "../utils/hashPassword";
 import decodeToken from "../utils/decodeToken";
 import { Md5 } from "ts-md5";
 import User_Infor from "../interface/user_infor";
+import Token_Decoded from "../interface/token_decoded";
 class UserController {
   async register(request: Request, response: Response) {
     const { email } = request.body;
@@ -69,7 +67,7 @@ class UserController {
     const { email, password } = request.body;
     const account = await UserModel.login(email, password);
     if (account) {
-      const token = expToken(account.token)
+      const token = (<Token_Decoded> await decodeToken(account.token)).status
         ? account.token
         : await generateToken(account);
       if (account.token !== token) {
